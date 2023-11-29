@@ -41,8 +41,7 @@ public class StableDiffusionImage2Image : StableDiffusionGenerator
         }
         
         byte[] imageData = Convert.FromBase64String(json.images[0]);
-        Debug.Log(json.images[0]);
-
+        
         Texture2D texture = new Texture2D(2, 2);
         texture.LoadImage(imageData);
         texture.Apply();

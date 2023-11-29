@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 using Newtonsoft.Json;
+using TMPro;
 
 public class StableDiffusionConfiguration : MonoBehaviour
 {
@@ -20,6 +22,10 @@ public class StableDiffusionConfiguration : MonoBehaviour
 
     [SerializeField]
     private StableDiffusionSettings settings;
+    [SerializeField]
+    private TMP_Dropdown modelDropdown;
+    [SerializeField]
+    private TMP_Dropdown samplerDropdown;
 
     [SerializeField]
     private string[] samplers = new string[]
@@ -38,16 +44,20 @@ public class StableDiffusionConfiguration : MonoBehaviour
     private void Start()
     {
         ListModels();
+
+        samplerDropdown.ClearOptions();
+        List<TMP_Dropdown.OptionData> options = new List<TMP_Dropdown.OptionData>();
+        for (int i = 0; i < samplers.Length; i++)
+        {
+            options.Add(new TMP_Dropdown.OptionData(samplers[i]));
+        }
+        samplerDropdown.AddOptions(options);
     }
 
     public void ListModels()
     {
+        modelDropdown.ClearOptions();
         StartCoroutine(ListModelsAsync());
-        if (modelNames != null)
-        {
-            for (int i = 0; i < modelNames.Length; i++)
-                Debug.Log(modelNames[i]);
-        }
     }
 
     private IEnumerator ListModelsAsync()
@@ -69,9 +79,14 @@ public class StableDiffusionConfiguration : MonoBehaviour
         {
             Model[] models = JsonConvert.DeserializeObject<Model[]>(task.Result);
             List<string> names = new List<string>();
+            List<TMP_Dropdown.OptionData> options = new List<TMP_Dropdown.OptionData>();
             foreach (Model m in models)
+            {
                 names.Add(m.model_name);
+                options.Add(new TMP_Dropdown.OptionData(m.model_name));
+            }
             modelNames = names.ToArray();
+            modelDropdown.AddOptions(options);
         }
         catch
         {

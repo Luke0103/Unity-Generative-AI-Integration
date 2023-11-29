@@ -109,6 +109,16 @@ public abstract class StableDiffusionGenerator : MonoBehaviour
         }
     }
 
+    public void OnModelDropdownUpdate(int index)
+    {
+        selectedModel = index;
+    }
+
+    public void OnSamplerDropdownUpdate(int index)
+    {
+        selectedSampler = index;
+    }
+
     public virtual void SetPromptByInputField()
     {
         prompt = promptInputField.text;
