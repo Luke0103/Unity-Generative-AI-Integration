@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 public class StableDiffusionImage2Image : StableDiffusionGenerator
 {
     [SerializeField] private Image originTexture;
-    [SerializeField] private Texture2D inputTex;
    
     protected override IEnumerator GenerateAsync()
     {
@@ -42,6 +41,7 @@ public class StableDiffusionImage2Image : StableDiffusionGenerator
         }
         
         byte[] imageData = Convert.FromBase64String(json.images[0]);
+        Debug.Log(json.images[0]);
 
         Texture2D texture = new Texture2D(2, 2);
         texture.LoadImage(imageData);
@@ -59,16 +59,12 @@ public class StableDiffusionImage2Image : StableDiffusionGenerator
     protected override SDParamsIn GetCurrentSDParamsIn()
     {
         //Stable Diffusion Parameters Initialization
-        byte[] originImgBytes = inputTex.EncodeToPNG();
-        Texture2D resizedTex = new Texture2D(2, 2);
-        resizedTex.LoadImage(originImgBytes);
-        resizedTex.Resize(width, height);
-        resizedTex.Apply();
+        byte[] originImgBytes = ((Texture2D)originTexture.mainTexture).EncodeToPNG();
+        string originImgString = Convert.ToBase64String(originImgBytes);
         
-        string originImgString = Convert.ToBase64String(resizedTex.EncodeToPNG());
-
         SDParamsInImg2Img sdParams = new SDParamsInImg2Img();
         sdParams.init_images = new string[] { originImgString };
+        sdParams.include_init_images = true;
         sdParams.prompt = prompt;
         sdParams.negative_prompt = negativePrompt;
         sdParams.steps = steps;
