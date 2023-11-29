@@ -24,6 +24,7 @@ public class StableDiffusionSettings : ScriptableObject
     public string pass = "";
 }
 
+[System.Serializable]
 public class SDParamsIn
 {
     public string prompt = "";
@@ -126,6 +127,7 @@ class SDParamsOutTxt2Img : SDParamsOut
 /// Data structure to easily serialize the parameters to send
 /// to the Stable Diffusion server when generating an image via Img2Img.
 /// </summary>
+[System.Serializable]
 class SDParamsInImg2Img : SDParamsIn
 {
     public string[] init_images = { "" };
